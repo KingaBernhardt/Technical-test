@@ -60,5 +60,15 @@ namespace AllAboutDough.Services
             }
             return orderDates;
         }
+
+        public DateTime ConvertStringToDateTime(List<string> orderDates)
+        {
+            DateTime orderDateTime = new DateTime();
+            foreach (var date in orderDates)
+            {
+                orderDateTime = DateTime.Parse(date);
+            }
+            return orderDateTime;
+        }
     }
 }

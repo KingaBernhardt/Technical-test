@@ -14,6 +14,7 @@ namespace AllAboutDough
         {
             string jsonString = ReadJsonFromFile();
             OrderService order = new OrderService();
+            order.TypeOfToppings(order.GetToppings(JsonToCsv(jsonString)));
             foreach (var item in order.GetToppings(JsonToCsv(jsonString)))
             {
                 Console.WriteLine(item);

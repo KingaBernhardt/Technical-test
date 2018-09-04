@@ -24,8 +24,8 @@ namespace AllAboutDough.Services
         public string[] SplitCsvIntoRows(string orderSpecification)
         {
             string[] rowsInOrderSpecification = orderSpecification.Split("\r\n");
-            string[] neededRowsInOrderSpecification = new string[rowsInOrderSpecification.Length-1];
-            for (int i = 1; i < rowsInOrderSpecification.Length-1; i++)
+            string[] neededRowsInOrderSpecification = new string[rowsInOrderSpecification.Length - 1];
+            for (int i = 1; i < rowsInOrderSpecification.Length - 1; i++)
             {
                 neededRowsInOrderSpecification[i - 1] += rowsInOrderSpecification[i];
             }
@@ -36,7 +36,7 @@ namespace AllAboutDough.Services
         {
             string[] neededRowsInOrderSpecification = SplitCsvIntoRows(orderSpecification);
             string[][] partInOrderSpecification = new string[neededRowsInOrderSpecification.Length][];
-            for (int i = 0; i < neededRowsInOrderSpecification.Length-1; i++)
+            for (int i = 0; i < neededRowsInOrderSpecification.Length - 1; i++)
             {
                 partInOrderSpecification[i] = neededRowsInOrderSpecification[i].Split(",");
             }
@@ -47,7 +47,7 @@ namespace AllAboutDough.Services
         {
             List<DateTime> orderDates = new List<DateTime>();
             string[][] partInOrderSpecification = SplitCsvRowsIntoParts(orderSpecification);
-            for (int i = 0; i < partInOrderSpecification.Length-1; i++)
+            for (int i = 0; i < partInOrderSpecification.Length - 1; i++)
             {
                 orderDates.Add(Convert.ToDateTime(partInOrderSpecification[i][0]));
             }
@@ -58,7 +58,7 @@ namespace AllAboutDough.Services
         {
             List<string> pizzaToppings = new List<string>();
             string[][] partsInOrderSpecification = SplitCsvRowsIntoParts(orderSpecification);
-            for (int i = 0; i < partsInOrderSpecification.Length-1; i++)
+            for (int i = 0; i < partsInOrderSpecification.Length - 1; i++)
             {
                 for (int j = 0; j < partsInOrderSpecification[i].Length; j++)
                 {
@@ -70,6 +70,23 @@ namespace AllAboutDough.Services
                 pizzaToppings.Remove(partsInOrderSpecification[i][0]);
             }
             return pizzaToppings;
+        }
+
+        public void TypeOfToppings(List<string> pizzaToppings)
+        {
+            List<string> vegaToppings = new List<string>();
+            List<string> nonVegaToppings = new List<string>();
+            foreach (var toppingItem in pizzaToppings)
+            {
+                if (toppingItem.Equals("salami") || toppingItem.Equals("ham") || toppingItem.Equals("anchovies"))
+                {
+                    nonVegaToppings.Add(toppingItem);
+                }
+                else
+                {
+                    vegaToppings.Add(toppingItem);
+                }
+            }
         }
     }
 }

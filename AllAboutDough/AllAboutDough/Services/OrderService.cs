@@ -53,5 +53,23 @@ namespace AllAboutDough.Services
             }
             return orderDates;
         }
+
+        public List<string> GetToppings(string orderSpecification)
+        {
+            List<string> pizzaToppings = new List<string>();
+            string[][] partsInOrderSpecification = SplitCsvRowsIntoParts(orderSpecification);
+            for (int i = 0; i < partsInOrderSpecification.Length-1; i++)
+            {
+                for (int j = 0; j < partsInOrderSpecification[i].Length; j++)
+                {
+                    if (!pizzaToppings.Contains(partsInOrderSpecification[i][j]))
+                    {
+                        pizzaToppings.Add(partsInOrderSpecification[i][j]);
+                    }
+                }
+                pizzaToppings.Remove(partsInOrderSpecification[i][0]);
+            }
+            return pizzaToppings;
+        }
     }
 }

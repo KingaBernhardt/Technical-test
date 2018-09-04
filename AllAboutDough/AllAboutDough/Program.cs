@@ -14,6 +14,10 @@ namespace AllAboutDough
         {
             string jsonString = ReadJsonFromFile();
             OrderService order = new OrderService();
+            foreach (var item in order.GetToppings(JsonToCsv(jsonString)))
+            {
+                Console.WriteLine(item);
+            }
             order.SplitCsvIntoRows(JsonToCsv(jsonString));
             order.SplitCsvRowsIntoParts(JsonToCsv(jsonString));
             foreach (var item in order.GetOrderDates(JsonToCsv(jsonString)))

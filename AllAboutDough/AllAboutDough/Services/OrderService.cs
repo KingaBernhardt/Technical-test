@@ -1,6 +1,8 @@
 ﻿using AllAboutDough.Repositories;
+using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
@@ -41,34 +43,15 @@ namespace AllAboutDough.Services
             return partInOrderSpecification;
         }
 
-        public List<string> GetOrderDates(string orderSpecification)
+        public List<DateTime> GetOrderDates(string orderSpecification)
         {
-            List<string> orderDates = new List<string>();
+            List<DateTime> orderDates = new List<DateTime>();
             string[][] partInOrderSpecification = SplitCsvRowsIntoParts(orderSpecification);
-            string[] firstElementInRow = SplitCsvIntoRows(orderSpecification);
             for (int i = 0; i < partInOrderSpecification.Length-1; i++)
             {
-                string[] neededRowsInOrderSpecification = partInOrderSpecification[i];
-
-                for (int j = 0; j < neededRowsInOrderSpecification.Length; j++)
-                {
-                    if (!orderDates.Contains(neededRowsInOrderSpecification[0]))
-                    {
-                        orderDates.Add(neededRowsInOrderSpecification[0]);
-                    }
-                }
+                orderDates.Add(Convert.ToDateTime(partInOrderSpecification[i][0]));
             }
             return orderDates;
-        }
-
-        public DateTime ConvertStringToDateTime(List<string> orderDates)
-        {
-            DateTime orderDateTime = new DateTime();
-            foreach (var date in orderDates)
-            {
-                orderDateTime = DateTime.Parse(date);
-            }
-            return orderDateTime;
         }
     }
 }

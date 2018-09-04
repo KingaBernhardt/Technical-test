@@ -14,12 +14,13 @@ namespace AllAboutDough
         {
             string jsonString = ReadJsonFromFile();
             OrderService order = new OrderService();
+            order.SplitCsvIntoRows(JsonToCsv(jsonString));
+            order.SplitCsvRowsIntoParts(JsonToCsv(jsonString));
             foreach (var item in order.GetOrderDates(JsonToCsv(jsonString)))
             {
                 Console.WriteLine(item);
             }
             WriteCsvIntoFile(jsonString);
-
             Console.WriteLine(JsonToCsv(jsonString));
             Console.ReadLine();
         }

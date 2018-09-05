@@ -12,10 +12,6 @@ namespace AllAboutDough.Services
     {
         private OrderRepository orderRepository;
 
-        public OrderService()
-        {
-        }
-
         public OrderService(OrderRepository orderRepository)
         {
             this.orderRepository = orderRepository;
@@ -31,6 +27,8 @@ namespace AllAboutDough.Services
             }
             return neededRowsInOrderSpecification;
         }
+        //string a = input.Substring(0, 18);
+        //string b = input.Substring(19, neededRowsinOrderSpecification.Length())
 
         public string[][] SplitCsvRowsIntoParts(string orderSpecification)
         {
@@ -72,9 +70,8 @@ namespace AllAboutDough.Services
             return pizzaToppings;
         }
 
-        public void TypeOfToppings(List<string> pizzaToppings)
+        public List<string> CollectNonVegetarianToppings(List<string> pizzaToppings)
         {
-            List<string> vegaToppings = new List<string>();
             List<string> nonVegaToppings = new List<string>();
             foreach (var toppingItem in pizzaToppings)
             {
@@ -82,10 +79,55 @@ namespace AllAboutDough.Services
                 {
                     nonVegaToppings.Add(toppingItem);
                 }
-                else
+            }
+            return nonVegaToppings;
+        }
+
+        public string[] ConcatToppingsToString(string orderSpecification)
+        {
+            string[][] partsInOrderSpecification = SplitCsvRowsIntoParts(orderSpecification);
+            string[] toppings = new string[partsInOrderSpecification.GetLength(0) - 1];
+            string temp = "";
+            for (int i = 0; i < partsInOrderSpecification.GetLength(0) - 1; i++)
+            {
+                for (int j = 1; j < partsInOrderSpecification[i].Length; j++)
                 {
-                    vegaToppings.Add(toppingItem);
+                    temp += partsInOrderSpecification[i][j] + " ";
+                    toppings[i] = temp;
                 }
+                temp = "";
+            }
+            return toppings;
+        }
+
+        public void AddField(string orderSpecification)
+        {
+            Orders orders = new Orders();
+            foreach (var item in GetOrderDates(orderSpecification))
+            {
+                orders.OrderDate = item;
+            }
+            foreach (var item in ConcatToppingsToString(orderSpecification))
+            {
+                orders.Topping = item;
+            }
+            orderRepository.Create(orders);
+        }
+
+        public void CreateEntity(string orderSpecification)
+        {
+            List<DateTime> orderDates = GetOrderDates(orderSpecification);
+            string[] toppings = ConcatToppingsToString(orderSpecification);
+        
+            for (int i = 0; i < toppings.Length; i++)
+            {
+                Orders orders = new Orders()
+                {
+                    OrderDate = orderDates[i],
+                    Topping = toppings[i],
+                    IsToppingVegetarian = !(CollectNonVegetarianToppings(GetToppings(orderSpecification)).Any(toppings[i].Contains))
+                };
+                orderRepository.Create(orders);
             }
         }
     }

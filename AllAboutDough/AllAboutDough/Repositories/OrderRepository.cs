@@ -9,7 +9,7 @@ namespace AllAboutDough.Repositories
     {
         private OrderDbContext orderDbContext;
 
-        public void OrderDbContext(OrderDbContext orderDbContext)
+        OrderRepository (OrderDbContext orderDbContext)
         {
             this.orderDbContext = orderDbContext;
         }

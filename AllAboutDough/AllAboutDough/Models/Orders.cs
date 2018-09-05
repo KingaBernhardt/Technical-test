@@ -14,5 +14,9 @@ namespace AllAboutDough
         public DateTime OrderDate { get; set; }
         public string Topping { get; set; }
         public bool IsToppingVegetarian { get; set; }
+
+        public Orders()
+        {
+        }
     }
 }

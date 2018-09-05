@@ -24,8 +24,8 @@ namespace AllAboutDough
             string connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog=AllAboutDough;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             services.AddDbContext<OrderDbContext>(options => options.UseSqlServer(connectionString));
             services.AddTransient<OrderDbContext>();
-            services.AddTransient<OrderRepository>();
-            services.AddTransient<OrderService>();
+            services.AddScoped<OrderRepository>();
+            services.AddScoped<OrderService>();
         }
     }
 }

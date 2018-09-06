@@ -14,12 +14,6 @@ namespace AllAboutDough
 {
     public class Program
     {
-        private OrderService orderService;
-        public Program(OrderService orderService)
-        {
-            this.orderService = orderService;
-        }
-
         static void Main(string[] args)
         {
             /*var serviceProvider = new ServiceCollection()
@@ -41,11 +35,16 @@ namespace AllAboutDough
             //do the actual work here
             var bar = serviceProvider.GetService<OrderService>();*/
            
-
+           
             string jsonString = ReadJsonFromFile();
-
-            orderServices.CollectNonVegetarianToppings(order.GetToppings(JsonToCsv(jsonString)));
-            order.CreateEntity(JsonToCsv(jsonString));
+            OrderService order = new OrderService();
+            foreach (var item in order.DecideBooleanValue(JsonToCsv(jsonString)))
+            {
+                Console.WriteLine(item);
+            }
+            order.CreateUpdatedCsv(order.GetOrderDates(JsonToCsv(jsonString)),order.ConcatToppingsToString(JsonToCsv(jsonString)), order.DecideBooleanValue(JsonToCsv(jsonString)), JsonToCsv(jsonString));
+            order.CollectNonVegetarianToppings(order.GetToppings(JsonToCsv(jsonString)));
+            //order.CreateEntity(JsonToCsv(jsonString));
             foreach (var item in order.ConcatToppingsToString(JsonToCsv(jsonString)))
             {
                 Console.WriteLine(item);
@@ -156,12 +155,12 @@ namespace AllAboutDough
             return csvString.ToString();
         }
 
-        public static void WriteCsvIntoFile(string jsonString)
+        public static void WriteCsvIntoFile(string csvString)
         {
             try
             {
                 string ordersCsvFilepath = @"../../../orders.csv";
-                File.WriteAllText(ordersCsvFilepath, JsonToCsv(jsonString));
+                File.WriteAllText(ordersCsvFilepath, JsonToCsv(csvString));
             }
             catch (FileNotFoundException e)
             {
@@ -169,5 +168,44 @@ namespace AllAboutDough
                 throw;
             }
         }
+
+       /* private static DataTable GetDataTabletFromCSVFile(string csvFilePath)
+        {
+            DataTable csvData = new DataTable();
+            try
+            {
+                using (TextFieldParser csvReader = new TextFieldParser(csvFilePath))
+                {
+                    csvReader.SetDelimiters(new string[] { "," });
+                    csvReader.HasFieldsEnclosedInQuotes = true;
+                    string[] colFields = csvReader.ReadFields();
+                    foreach (string column in colFields)
+                    {
+                        DataColumn datecolumn = new DataColumn(column);
+                        datecolumn.AllowDBNull = true;
+                        csvData.Columns.Add(datecolumn);
+                    }
+                    while (!csvReader.EndOfData)
+                    {
+                        string[] fieldData = csvReader.ReadFields();
+                        //Making empty value as null
+                        for (int i = 0; i < fieldData.Length; i++)
+                        {
+                            if (fieldData[i] == "")
+                            {
+                                fieldData[i] = null;
+                            }
+                        }
+                        csvData.Rows.Add(fieldData);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return csvData;
+        }*/
     }
 }
+

@@ -15,34 +15,14 @@ namespace AllAboutDough
     public class Program
     {
         static void Main(string[] args)
-        {
-            /*var serviceProvider = new ServiceCollection()
-            .AddLogging()
-            .AddSingleton<OrderService>()
-            .AddSingleton<OrderRepository>()
-            .BuildServiceProvider();
-
-            //configure console logging
-            serviceProvider
-             .GetService<ILoggerFactory>()
-             .AddConsole(LogLevel.Debug);
-
-            var logger = serviceProvider.GetService<ILoggerFactory>()
-                .CreateLogger<Program>();
-            logger.LogDebug("Starting application");
-
-
-            //do the actual work here
-            var bar = serviceProvider.GetService<OrderService>();*/
-           
-           
+        {  
             string jsonString = ReadJsonFromFile();
             OrderService order = new OrderService();
             foreach (var item in order.DecideBooleanValue(JsonToCsv(jsonString)))
             {
                 Console.WriteLine(item);
             }
-            order.CreateUpdatedCsv(order.GetOrderDates(JsonToCsv(jsonString)),order.ConcatToppingsToString(JsonToCsv(jsonString)), order.DecideBooleanValue(JsonToCsv(jsonString)), JsonToCsv(jsonString));
+            order.CreateUpdatedCsv(order.GenerateGuid(), order.GetOrderDates(JsonToCsv(jsonString)),order.ConcatToppingsToString(JsonToCsv(jsonString)), order.DecideBooleanValue(JsonToCsv(jsonString)), JsonToCsv(jsonString));
             order.CollectNonVegetarianToppings(order.GetToppings(JsonToCsv(jsonString)));
             //order.CreateEntity(JsonToCsv(jsonString));
             foreach (var item in order.ConcatToppingsToString(JsonToCsv(jsonString)))
@@ -58,30 +38,6 @@ namespace AllAboutDough
             {
                 Console.WriteLine(top[i][0]);
             }
-
-
-            // get the topping in one line, yet not one string
-
-            /*string[] lol = new string[top.GetLength(0) - 1];
-            string temp = "";
-            for (int i = 0; i < top.GetLength(0) - 1; i++)
-            {
-                for (int j = 1; j < top[i].Length; j++)
-                {
-                    temp += top[i][j] + " ";
-                    lol[i] = temp;
-                    Console.Write(top[i][j] + " ");
-
-                }
-                temp = "";
-                Console.WriteLine();
-            }
-
-            Console.WriteLine("the real");
-            for (int i = 0; i < lol.Length; i++)
-            {
-                Console.WriteLine(lol[i]);
-            }*/
 
             foreach (var item in order.GetToppings(JsonToCsv(jsonString)))
             {
@@ -168,44 +124,6 @@ namespace AllAboutDough
                 throw;
             }
         }
-
-       /* private static DataTable GetDataTabletFromCSVFile(string csvFilePath)
-        {
-            DataTable csvData = new DataTable();
-            try
-            {
-                using (TextFieldParser csvReader = new TextFieldParser(csvFilePath))
-                {
-                    csvReader.SetDelimiters(new string[] { "," });
-                    csvReader.HasFieldsEnclosedInQuotes = true;
-                    string[] colFields = csvReader.ReadFields();
-                    foreach (string column in colFields)
-                    {
-                        DataColumn datecolumn = new DataColumn(column);
-                        datecolumn.AllowDBNull = true;
-                        csvData.Columns.Add(datecolumn);
-                    }
-                    while (!csvReader.EndOfData)
-                    {
-                        string[] fieldData = csvReader.ReadFields();
-                        //Making empty value as null
-                        for (int i = 0; i < fieldData.Length; i++)
-                        {
-                            if (fieldData[i] == "")
-                            {
-                                fieldData[i] = null;
-                            }
-                        }
-                        csvData.Rows.Add(fieldData);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-            return csvData;
-        }*/
     }
 }
 

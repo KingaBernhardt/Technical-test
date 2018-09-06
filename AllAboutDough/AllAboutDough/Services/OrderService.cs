@@ -33,16 +33,35 @@ namespace AllAboutDough.Services
             return neededRowsInOrderSpecification;
         }
 
-        public void CreateUpdatedCsv(List<string> orderDates, List<string> toppings, List<bool> isVegetarian, string orderSpecification)
+        public List<Guid> GenerateGuid()
         {
+            IList<Guid> guidId = new List<Guid>();
+            guidId.Add(Guid.NewGuid());
+            guidId.Add(Guid.NewGuid());
+            guidId.Add(Guid.NewGuid());
+            guidId.Add(Guid.NewGuid());
+            guidId.Add(Guid.NewGuid());
+            guidId.Add(Guid.NewGuid());
+            guidId.Add(Guid.NewGuid());
+            guidId.Add(Guid.NewGuid());
+            guidId.Add(Guid.NewGuid());
+            guidId.Add(Guid.NewGuid());
+            guidId.Add(Guid.NewGuid());
+
+            return guidId.ToList();
+        }
+
+        public void CreateUpdatedCsv(List<Guid> guidId, List<string> orderDates, List<string> toppings, List<bool> isVegetarian, string orderSpecification)
+        {
+            guidId = GenerateGuid();
             orderDates = GetOrderDates(orderSpecification);
             toppings = ConcatToppingsToString(orderSpecification);
             isVegetarian = DecideBooleanValue(orderSpecification);
-            using (StreamWriter sw = File.CreateText("../../../orderUpdated.csv"))
+            using (StreamWriter sw = File.CreateText("../../../order.csv"))
             {
                 for (int i = 0; i < toppings.Count; i++)
                 {
-                    var line = String.Format("{0},{1},{2}", orderDates[i], toppings[i], isVegetarian[i]);
+                    var line = String.Format("{0},{1},{2},{3}", guidId[i], orderDates[i], toppings[i], isVegetarian[i]);
                     sw.WriteLine(line);
                 }
             }
@@ -61,7 +80,7 @@ namespace AllAboutDough.Services
 
         public List<string> GetOrderDates(string orderSpecification)
         {
-            List<DateTime> orderDates = new List<DateTime>();
+            //List<DateTime> orderDates = new List<DateTime>();
             List<string> orderDatesString = new List<string>();
             string[][] partInOrderSpecification = SplitCsvRowsIntoParts(orderSpecification);
             for (int i = 0; i < partInOrderSpecification.Length - 1; i++)
@@ -121,6 +140,7 @@ namespace AllAboutDough.Services
             toppings.ToList();
             return toppings.ToList();
         }
+
         public List<bool> DecideBooleanValue(string orderSpecification)
         {
             List<bool> isVega = new List<bool>();
@@ -140,36 +160,5 @@ namespace AllAboutDough.Services
             }
             return isVega;
         }
-
-        /*public void AddField(string orderSpecification)
-        {
-            Orders orders = new Orders();
-            foreach (var item in GetOrderDates(orderSpecification))
-            {
-                orders.OrderDate = item;
-            }
-            foreach (var item in ConcatToppingsToString(orderSpecification))
-            {
-                orders.Topping = item;
-            }
-            orderRepository.Create(orders);
-        }
-
-        public void CreateEntity(string orderSpecification)
-        {
-            List<DateTime> orderDates = GetOrderDates(orderSpecification);
-            List<string> toppings = ConcatToppingsToString(orderSpecification);
-        
-            for (int i = 0; i < toppings.Count; i++)
-            {
-                Orders orders = new Orders()
-                {
-                    OrderDate = orderDates[i],
-                    Topping = toppings[i],
-                    IsToppingVegetarian = !(CollectNonVegetarianToppings(GetToppings(orderSpecification)).Any(toppings[i].Contains))
-                };
-                orderRepository.Create(orders);
-            }
-        }*/
     }
 }

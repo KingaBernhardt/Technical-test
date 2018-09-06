@@ -33,27 +33,8 @@ namespace AllAboutDough.Services
             return neededRowsInOrderSpecification;
         }
 
-        public List<Guid> GenerateGuid()
+        public void CreateUpdatedCsv(List<string> orderDates, List<string> toppings, List<bool> isVegetarian, string orderSpecification)
         {
-            IList<Guid> guidId = new List<Guid>();
-            guidId.Add(Guid.NewGuid());
-            guidId.Add(Guid.NewGuid());
-            guidId.Add(Guid.NewGuid());
-            guidId.Add(Guid.NewGuid());
-            guidId.Add(Guid.NewGuid());
-            guidId.Add(Guid.NewGuid());
-            guidId.Add(Guid.NewGuid());
-            guidId.Add(Guid.NewGuid());
-            guidId.Add(Guid.NewGuid());
-            guidId.Add(Guid.NewGuid());
-            guidId.Add(Guid.NewGuid());
-
-            return guidId.ToList();
-        }
-
-        public void CreateUpdatedCsv(List<Guid> guidId, List<string> orderDates, List<string> toppings, List<bool> isVegetarian, string orderSpecification)
-        {
-            guidId = GenerateGuid();
             orderDates = GetOrderDates(orderSpecification);
             toppings = ConcatToppingsToString(orderSpecification);
             isVegetarian = DecideBooleanValue(orderSpecification);
@@ -61,7 +42,7 @@ namespace AllAboutDough.Services
             {
                 for (int i = 0; i < toppings.Count; i++)
                 {
-                    var line = String.Format("{0},{1},{2},{3}", guidId[i], orderDates[i], toppings[i], isVegetarian[i]);
+                    var line = String.Format("{0},{1},{2}", orderDates[i], toppings[i], isVegetarian[i]);
                     sw.WriteLine(line);
                 }
             }
@@ -80,15 +61,12 @@ namespace AllAboutDough.Services
 
         public List<string> GetOrderDates(string orderSpecification)
         {
-            //List<DateTime> orderDates = new List<DateTime>();
             List<string> orderDatesString = new List<string>();
             string[][] partInOrderSpecification = SplitCsvRowsIntoParts(orderSpecification);
             for (int i = 0; i < partInOrderSpecification.Length - 1; i++)
             {
                 orderDatesString.Add(partInOrderSpecification[i][0]);
-                //orderDates.Add(Convert.ToDateTime(partInOrderSpecification[i][0]));
             }
-            //return orderDates;
             return orderDatesString;
         }
 

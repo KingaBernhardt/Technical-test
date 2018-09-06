@@ -15,48 +15,11 @@ namespace AllAboutDough
     public class Program
     {
         static void Main(string[] args)
-        {  
+        {
+            OrderService orderService = new OrderService();
             string jsonString = ReadJsonFromFile();
-            OrderService order = new OrderService();
-            foreach (var item in order.DecideBooleanValue(JsonToCsv(jsonString)))
-            {
-                Console.WriteLine(item);
-            }
-            order.CreateUpdatedCsv(order.GenerateGuid(), order.GetOrderDates(JsonToCsv(jsonString)),order.ConcatToppingsToString(JsonToCsv(jsonString)), order.DecideBooleanValue(JsonToCsv(jsonString)), JsonToCsv(jsonString));
-            order.CollectNonVegetarianToppings(order.GetToppings(JsonToCsv(jsonString)));
-            //order.CreateEntity(JsonToCsv(jsonString));
-            foreach (var item in order.ConcatToppingsToString(JsonToCsv(jsonString)))
-            {
-                Console.WriteLine(item);
-            }
-            var lista = order.GetToppings(JsonToCsv(jsonString));
-            var top = order.SplitCsvRowsIntoParts(JsonToCsv(jsonString));
-            var kist = "";
-
-            // get the orderDate
-            for (int i = 0; i < top.GetLength(0) - 1; i++)
-            {
-                Console.WriteLine(top[i][0]);
-            }
-
-            foreach (var item in order.GetToppings(JsonToCsv(jsonString)))
-            {
-               // Console.WriteLine(item);
-            }
-            foreach (var item in order.SplitCsvIntoRows(JsonToCsv(jsonString)))
-            {
-                // Console.WriteLine(item);
-            }
-            //order.SplitCsvIntoRows(JsonToCsv(jsonString));
-
-            order.SplitCsvRowsIntoParts(JsonToCsv(jsonString));
-            foreach (var item in order.GetOrderDates(JsonToCsv(jsonString)))
-            {
-                // Console.WriteLine(item);
-            }
-            WriteCsvIntoFile(jsonString);
-            // Console.WriteLine(JsonToCsv(jsonString));
-            Console.ReadLine();
+            orderService.CreateUpdatedCsv(orderService.GetOrderDates(JsonToCsv(jsonString)), orderService.GetToppings(JsonToCsv(jsonString)),
+                                           orderService.DecideBooleanValue(JsonToCsv(jsonString)), JsonToCsv(jsonString));
         }
 
         public static string ReadJsonFromFile()
@@ -126,4 +89,3 @@ namespace AllAboutDough
         }
     }
 }
-
